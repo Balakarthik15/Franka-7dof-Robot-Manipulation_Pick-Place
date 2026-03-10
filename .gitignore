@@ -1,0 +1,16 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# IDE settings (optional but recommended)
+.vscode/
+.idea/
+.DS_Store
+
+# Colcon specific
+COLCON_IGNORE
