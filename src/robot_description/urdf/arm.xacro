@@ -13,7 +13,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://robot_description/meshes/collision/link0.obj"/>
+        <mesh filename="package://robot_description/meshes/visual/link0.dae"/>
       </geometry>
     </collision>
       <inertial>
@@ -39,7 +39,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://robot_description/meshes/collision/link1.obj"/>
+        <mesh filename="package://robot_description/meshes/visual/link1.dae"/>
       </geometry>
     </collision>
         <inertial>
