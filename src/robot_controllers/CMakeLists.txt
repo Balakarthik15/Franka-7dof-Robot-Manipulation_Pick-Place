@@ -28,6 +28,12 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+  PROGRAMS src/slider_control.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME slider_control
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
