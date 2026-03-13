@@ -1,0 +1,56 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    gripper_controller:
+      type: position_controllers/GripperActionController
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      - velocity
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+    constraints:
+      stopped_velocity_tolerance: 0.01   # rad/s — "close enough to stopped"
+      goal_time: 0.0                     # 0 = no overall time limit enforced
+
+      # Per-joint goal tolerance (radians) — arm must be within this at goal
+      panda_joint1: { goal: 0.01 }
+      panda_joint2: { goal: 0.01 }
+      panda_joint3: { goal: 0.01 }
+      panda_joint4: { goal: 0.01 }
+      panda_joint5: { goal: 0.01 }
+      panda_joint6: { goal: 0.01 }
+      panda_joint7: { goal: 0.01 }
+
+gripper_controller:
+  ros__parameters:
+    # Controls only finger_joint1; joint2 follows via URDF mimic
+    joint: panda_finger_joint1
+
+    action_monitor_rate: 20.0    # Hz — how fast to check goal progress
+
+    goal_tolerance: 0.01         # metres
+    max_effort: 50.0             # N — grasping force
+    stall_velocity_threshold: 0.001   # m/s — "finger has stopped"
+    stall_timeout: 1.0           # seconds before declaring stall = grasped

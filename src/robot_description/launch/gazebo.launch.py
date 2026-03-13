@@ -2,12 +2,21 @@ import os
 from os import pathsep
 from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
-
+ 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
-from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    SetEnvironmentVariable,
+    TimerAction,
+    RegisterEventHandler,
+)
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import (
+    Command, LaunchConfiguration, PathJoinSubstitution, PythonExpression
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
+ 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -46,9 +55,9 @@ def generate_launch_description():
     if os.path.exists(internal_models):
         model_path += pathsep + internal_models
 
-    # Environment Variable for Ignition (Fortress uses GZ_SIM_RESOURCE_PATH)
+    # Environment Variable for Ignition
     gazebo_resource_path = SetEnvironmentVariable(
-        "GZ_SIM_RESOURCE_PATH",
+        "IGN_GAZEBO_RESOURCE_PATH",
         model_path
     )
 
@@ -98,23 +107,91 @@ def generate_launch_description():
         ],
     )
 
-    # Bridge for Clock and Camera Info
-    gz_ros2_bridge = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        arguments=[
-            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo"
+    # ── 4. Controller spawners ─────────────────────────────────────────────
+    # Connect to controller_manager that ign_ros2_control started inside Gazebo.
+    # Never use ros2_control_node here — ign_ros2_control/IgnitionSystem
+    # is NOT a standalone hardware plugin; it only works inside Ignition Gazebo.
+ 
+
+
+    controller_manager = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            {"robot_description": robot_description,
+             "use_sim_time": True},
+            os.path.join(
+                get_package_share_directory("robot_controllers"),
+                "config",
+                "ros2_controllers.yaml",
+            ),
         ],
     )
 
-    # Image Bridge (dedicated node for image streaming)
-    ros_gz_image_bridge = Node(
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        output="screen",
+        arguments=["joint_state_broadcaster",
+                   "--controller-manager", "/controller_manager"],
+    )
+ 
+    arm_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        output="screen",
+        arguments=["arm_controller",
+                   "--controller-manager", "/controller_manager"],
+    )
+ 
+    gripper_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        output="screen",
+        arguments=["gripper_controller",
+                   "--controller-manager", "/controller_manager"],
+    )
+ 
+    # Wait 10s for Ignition + ign_ros2_control to fully initialise,
+    # then spawn joint_state_broadcaster first, then arm + gripper after it exits
+    delayed_jsb = TimerAction(
+        period=3.0,
+        actions=[joint_state_broadcaster_spawner]
+    )
+ 
+    arm_after_jsb = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[arm_controller_spawner],
+        )
+    )
+ 
+    gripper_after_jsb = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[gripper_controller_spawner],
+        )
+    )
+ 
+    # ── 5. Bridges ─────────────────────────────────────────────────────────
+    gz_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        output="screen",
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+            "/panda/overhead_camera/camera_info"
+            "@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+        ],
+    )
+ 
+    image_bridge = Node(
         package="ros_gz_image",
         executable="image_bridge",
-        arguments=["/camera/image_raw"]
+        output="screen",
+        arguments=["/panda/overhead_camera/image_raw"]
     )
-
+ 
     return LaunchDescription([
         model_arg,
         world_name_arg,
@@ -122,6 +199,10 @@ def generate_launch_description():
         robot_state_publisher_node,
         gazebo,
         gz_spawn_entity,
-        gz_ros2_bridge,
-        ros_gz_image_bridge
+        delayed_jsb,
+        arm_after_jsb,
+        gripper_after_jsb,
+        gz_bridge,
+        image_bridge,
     ])
+ 

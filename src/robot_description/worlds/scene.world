@@ -29,20 +29,24 @@
     <!-- ======================== -->
     <!--   REQUIRED PLUGINS       -->
     <!-- ======================== -->
-    <plugin filename="gz-sim-physics-system"
-            name="gz::sim::systems::Physics"/>
-    <plugin filename="gz-sim-user-commands-system"
-            name="gz::sim::systems::UserCommands"/>
-    <plugin filename="gz-sim-scene-broadcaster-system"
-            name="gz::sim::systems::SceneBroadcaster"/>
-    <plugin filename="gz-sim-sensors-system"
-            name="gz::sim::systems::Sensors">
-      <render_engine>ogre2</render_engine>
-    </plugin>
+    <!-- Core simulation systems -->
+
 
     <!-- ======================== -->
     <!--   PHYSICS                -->
     <!-- ======================== -->
+
+    <plugin filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster"/>
+    <plugin filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
     <physics name="default_physics" type="ode">
       <real_time_update_rate>1000.0</real_time_update_rate>
       <max_step_size>0.001</max_step_size>

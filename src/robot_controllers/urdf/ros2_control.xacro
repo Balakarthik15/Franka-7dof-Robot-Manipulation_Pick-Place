@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Franka_panda">
+
+  <xacro:property name="PI" value="3.14159265359" />
+
+  <ros2_control name="RobotSystem" type="system">
+    
+    <!-- ros2_control Gazebo -->
+    <!-- ROS 2 Humble -->
+  
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>
+
+     <!-- ── Arm joints ──────────────────────────────────── -->
+
+    <!-- Joint 1 | range: -2.9671 … +2.9671 rad -->
+    <joint name="panda_joint1">
+      <command_interface name="position">
+        <param name="min">-2.9671</param>
+        <param name="max">2.9671</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 2 | range: -1.8326 … +1.8326 rad -->
+    <joint name="panda_joint2">
+      <command_interface name="position">
+        <param name="min">-1.8326</param>
+        <param name="max">1.8326</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">-0.785398</param>  <!-- -45° -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 3 | range: -2.9671 … +2.9671 rad -->
+    <joint name="panda_joint3">
+      <command_interface name="position">
+        <param name="min">-2.9671</param>
+        <param name="max">2.9671</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 4 | range: -3.1416 … 0.0 rad (elbow, never goes positive) -->
+    <joint name="panda_joint4">
+      <command_interface name="position">
+        <param name="min">-3.1416</param>
+        <param name="max">0.0</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">-2.356194</param>  <!-- -135° deep elbow -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 5 | range: -2.9671 … +2.9671 rad -->
+    <joint name="panda_joint5">
+      <command_interface name="position">
+        <param name="min">-2.9671</param>
+        <param name="max">2.9671</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 6 | range: -0.0873 … +3.8223 rad -->
+    <joint name="panda_joint6">
+      <command_interface name="position">
+        <param name="min">-0.0873</param>
+        <param name="max">3.8223</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">1.570796</param>  <!-- +90° -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Joint 7 | range: -2.9671 … +2.9671 rad -->
+    <joint name="panda_joint7">
+      <command_interface name="position">
+        <param name="min">-2.9671</param>
+        <param name="max">2.9671</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.785398</param>  <!-- +45° -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- ── Gripper joints ──────────────────────────────── -->
+    <!--
+      finger_joint2 MIMICS finger_joint1 in the URDF.
+      Both are declared here for ros2_control state broadcasting,
+      but only finger_joint1 receives commands from GripperActionController.
+      finger_joint2 follows via the URDF mimic tag.
+    -->
+
+    <!-- Finger Joint 1 | range: 0.0 … 0.04 m (half-width each finger) -->
+    <joint name="panda_finger_joint1">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">0.04</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.035</param>  <!-- open -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+    <!-- Finger Joint 2 — mimic of joint1; state only, no command needed -->
+    <joint name="panda_finger_joint2">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">0.04</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.035</param>  <!-- open -->
+      </state_interface>
+      <state_interface name="velocity">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+    </joint>
+
+  </ros2_control>
+
+</robot>
