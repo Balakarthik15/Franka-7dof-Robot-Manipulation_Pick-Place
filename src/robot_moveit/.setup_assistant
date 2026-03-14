@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: robot_description
+    relative_path: urdf/arm.xacro
+  srdf:
+    relative_path: config/Franka_Panda.srdf
+  package_settings:
+    author_name: Balakarthik
+    author_email: bkkarthik1599@gmail.com
+    generated_timestamp: 1773471002
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
