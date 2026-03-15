@@ -164,7 +164,7 @@
     <include>
       <uri>model://coke_can</uri>
       <name>coke_can</name>
-      <pose>1.47 -0.266 0.936 0 0 0</pose>
+      <pose>1.45 0.18 0.936 0 0 0</pose>
     </include>
 
     <include>
