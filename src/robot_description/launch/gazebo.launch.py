@@ -155,7 +155,7 @@ def generate_launch_description():
     # Wait 10s for Ignition + ign_ros2_control to fully initialise,
     # then spawn joint_state_broadcaster first, then arm + gripper after it exits
     delayed_jsb = TimerAction(
-        period=3.0,
+        period=10.0,
         actions=[joint_state_broadcaster_spawner]
     )
  

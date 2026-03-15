@@ -19,7 +19,10 @@ def generate_launch_description():
                 # 'model_path': '/home/balakarthik/yolov8n_openvino_model/',
                 # Or custom trained model:
                 # 'model_path': '/home/balakarthik/panda_yolo_training/custom_v1/weights/best.pt',
-                'model_path':         '/home/balakarthik/yolov8n_openvino_model',
+               'model_path': os.path.join(
+                            get_package_share_directory('robot_perception'),
+                            'data', 'weights', 'best_openvino_model'
+                            ),
 
                 # Confidence threshold — detections below this are ignored.
                 # Lower (0.3) = more detections but more false positives.

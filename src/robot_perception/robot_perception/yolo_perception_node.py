@@ -39,18 +39,18 @@ class YoloPerceptionNode(Node):
     # These match the z values in scene.world exactly.
     # Used to compute depth without a depth sensor.
     OBJECT_HEIGHTS = {
-        'bottle':      0.936,   # coke can centre (radius 0.033 + table 0.875 + small offset)
-        'sports ball': 0.911,   # cricket ball centre (radius 0.036 + table 0.875)
-        'cube':        0.900,   # wood cube centre (half-side 0.025 + table 0.875)
-        'small_box':   0.910,   # small box centre (half-side 0.035 + table 0.875)
+        'coke_can':      0.936,   # coke can centre (radius 0.033 + table 0.875 + small offset)
+        'cricket_ball': 0.911,   # cricket ball centre (radius 0.036 + table 0.875)
+        'small_box':   0.910,      # small box centre (half-side 0.035 + table 0.875)
+        'wood_cube':        0.900,   # wood cube centre (half-side 0.025 + table 0.875)
     }
 
     # ── Which bin each detected class goes into ────────────────────────────
     BIN_ASSIGNMENT = {
-        'bottle':      'bin_red',
-        'sports ball': 'bin_blue',
-        'cube':        'bin_green',
+        'coke_can':      'bin_red',
+        'cricket_ball': 'bin_blue',
         'small_box':   'bin_red',
+        'wood_cube':     'bin_green',
     }
 
     # ── Bin world positions (x, y) — for pick-and-place node reference ────

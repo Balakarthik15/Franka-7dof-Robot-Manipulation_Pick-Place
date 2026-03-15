@@ -14,6 +14,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
          (os.path.join('share', package_name, 'launch'),
             glob('launch/*.py')),
+        (os.path.join('share', package_name, 'data/weights/best_openvino_model'), 
+         glob('data/weights/best_openvino_model/*')),
 
     ],
     install_requires=['setuptools'],

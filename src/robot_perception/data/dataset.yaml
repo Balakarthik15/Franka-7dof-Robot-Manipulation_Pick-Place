@@ -1,0 +1,9 @@
+path: /home/balakarthik/Franka-7dof-Robot-Manipulation_Pick-Place/src/robot_perception/data
+train: images/train
+val: images/val
+nc: 4
+names:
+  0: coke_can
+  1: cricket_ball
+  2: small_box
+  3: wood_cube
