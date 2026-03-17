@@ -69,6 +69,7 @@ def generate_launch_description():
         output="log",
         arguments=["-d", rviz_config],
         parameters=[
+            {"use_sim_time": is_sim},
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
             moveit_config.robot_description_kinematics,

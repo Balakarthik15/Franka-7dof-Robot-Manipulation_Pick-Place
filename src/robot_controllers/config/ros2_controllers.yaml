@@ -5,7 +5,7 @@ controller_manager:
     arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
     gripper_controller:
-      type: position_controllers/GripperActionController
+      type: joint_trajectory_controller/JointTrajectoryController
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
@@ -45,12 +45,16 @@ arm_controller:
 
 gripper_controller:
   ros__parameters:
-    # Controls only finger_joint1; joint2 follows via URDF mimic
-    joint: panda_finger_joint1
+    joints:
+      - panda_finger_joint1
+      - panda_finger_joint2
 
-    action_monitor_rate: 20.0    # Hz — how fast to check goal progress
+    command_interfaces:
+      - position
 
-    goal_tolerance: 0.01         # metres
-    max_effort: 50.0             # N — grasping force
-    stall_velocity_threshold: 0.001   # m/s — "finger has stopped"
-    stall_timeout: 1.0           # seconds before declaring stall = grasped
+    state_interfaces:
+      - position
+      - velocity
+
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
