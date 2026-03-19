@@ -41,7 +41,10 @@ class PickPlaceNode(Node):
         self.declare_parameter("pick_loop_period", 2.0)
         self.declare_parameter("move_to_start_on_boot", True)
 
-
+        self.approach_height = float(self.get_parameter("approach_height").value)
+        self.grasp_z_offset = float(self.get_parameter("grasp_z_offset").value)
+        self.lift_height = float(self.get_parameter("lift_height").value)
+        self.bin_approach_offset = float(self.get_parameter("bin_approach_offset").value)
 
         self.arm_velocity = float(self.get_parameter("arm_velocity").value)
         self.arm_acceleration = float(self.get_parameter("arm_acceleration").value)
@@ -145,6 +148,13 @@ class PickPlaceNode(Node):
             PoseArray,
             "/detected_objects/poses",
             self.poses_callback,
+            10,
+        )
+
+        self.create_subscription(
+            String,
+            "/detected_objects/labels",
+            self.labels_callback,
             10,
         )
 
